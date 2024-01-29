@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
 import { Toaster, toast } from 'sonner'
@@ -57,7 +57,7 @@ const RecipeFormLayouts = () => {
     video_link: ''
   })
 
-  const onChange = (e) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({
       ...data,
       [e.target.name]: e.target.value
@@ -65,7 +65,7 @@ const RecipeFormLayouts = () => {
     console.log(data)
   }
 
-  const handleQuillRecipe = (value) => {
+  const handleQuillRecipe = (value: string) => {
     setData((data) => {
       return {
         ...data,
@@ -74,7 +74,7 @@ const RecipeFormLayouts = () => {
     })
   }
 
-  const handleQuillStep = (value) => {
+  const handleQuillStep = (value: string) => {
     setData((data) => {
       return {
         ...data,
@@ -83,7 +83,7 @@ const RecipeFormLayouts = () => {
     })
   }
 
-  let onClick = (e) => {
+  let onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     axios
       .post(`${process.env.NEXT_PUBLIC_MUSCLE_API}/recipes`, data)

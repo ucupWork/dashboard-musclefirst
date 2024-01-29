@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import axios from 'axios'
 import Link from 'next/link'
 import { Toaster, toast } from 'sonner'
@@ -14,7 +14,7 @@ export const SignUpComp = () => {
     role: 'user'
   })
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value
@@ -22,7 +22,7 @@ export const SignUpComp = () => {
   }
   console.log(form)
 
-  const checkValidation = (e) => {
+  const checkValidation = (e: ChangeEvent<HTMLInputElement>) => {
     const confirm = e.target.value
     setConfirmPasword(confirm)
     const cek = form.password
@@ -33,7 +33,7 @@ export const SignUpComp = () => {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     const cek = form.password
 
@@ -64,7 +64,7 @@ export const SignUpComp = () => {
             Sign Up to Muscle First Dashboard
           </h2>
 
-          <form onSubmit={handleSubmit}>
+          <form>
             <div className='mb-4'>
               <label className='mb-2.5 block font-medium text-black dark:text-white'>
                 Name
@@ -211,7 +211,7 @@ export const SignUpComp = () => {
             </div>
 
             <div className='mb-5'>
-              <input
+              <button
                 type='submit'
                 value='Create account'
                 onClick={handleSubmit}

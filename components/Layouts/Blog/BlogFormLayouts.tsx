@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
 import { Toaster, toast } from 'sonner'
@@ -56,7 +56,7 @@ const BlogFormLayouts = () => {
 
   console.log(data)
 
-  const onChange = (e) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({
       ...data,
       [e.target.name]: e.target.value
@@ -64,7 +64,7 @@ const BlogFormLayouts = () => {
     console.log(data)
   }
 
-  const handleQuillForm = (value) => {
+  const handleQuillForm = (value: string) => {
     setData((data) => {
       return {
         ...data,
@@ -73,7 +73,7 @@ const BlogFormLayouts = () => {
     })
   }
 
-  let onClick = (e) => {
+  let onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     axios
       .post(`${process.env.NEXT_PUBLIC_MUSCLE_API}/blog`, data)

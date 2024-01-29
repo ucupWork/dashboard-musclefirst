@@ -1,13 +1,26 @@
 'use client'
 import axios from 'axios'
-// import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import PaginationRecipe from '../Pagination/PaginationRecipe'
 
-const TableRecipes = () => {
-  const [data, setData] = useState([])
-  const [loading, isLoading] = useState(false)
+interface Recipe {
+  title: string
+  slug: string
+  category: string
+  protein: string
+  calories: string
+  img_recipe: string
+  tb_users: {
+    id: string
+    username: string
+    email: string
+  }
+}
+
+const TableRecipes: React.FC = () => {
+  const [data, setData] = useState<Recipe[]>([])
+  const [loading, isLoading] = useState<boolean>(false)
 
   useEffect(() => {
     isLoading(true)
@@ -24,11 +37,11 @@ const TableRecipes = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage] = useState(10)
+  const [postsPerPage] = useState<number>(10)
 
   const lastPostIndex = currentPage * postsPerPage
   const firstPostIndex = lastPostIndex - postsPerPage
-  const currentPosts = data.slice(firstPostIndex, lastPostIndex)
+  const currentPosts: Recipe[] = data.slice(firstPostIndex, lastPostIndex)
   return (
     <div className='px-5 pt-6 pb-2.5 '>
       <div className='max-w-full overflow-x-auto'>
@@ -60,7 +73,7 @@ const TableRecipes = () => {
             </tbody>
           ) : (
             <tbody>
-              {currentPosts.map((recipes, key) => (
+              {currentPosts.map((recipes: Recipe, key: number) => (
                 <tr key={key}>
                   <td className='border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11'>
                     <a
