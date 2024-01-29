@@ -1,17 +1,18 @@
 'use client'
 import axios from 'axios'
+// import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import PaginationBlog from '../Pagination/PaginationBlog'
+import PaginationRecipe from '../Pagination/PaginationRecipe'
 
-const TableBlog = () => {
+const TableRecipes = () => {
   const [data, setData] = useState([])
   const [loading, isLoading] = useState(false)
 
   useEffect(() => {
     isLoading(true)
     axios
-      .get(`${process.env.NEXT_PUBLIC_MUSCLE_API}/blog`)
+      .get(`${process.env.NEXT_PUBLIC_MUSCLE_API}/recipes`)
       .then((res) => {
         isLoading(false)
         setData(res.data.data)
@@ -28,7 +29,6 @@ const TableBlog = () => {
   const lastPostIndex = currentPage * postsPerPage
   const firstPostIndex = lastPostIndex - postsPerPage
   const currentPosts = data.slice(firstPostIndex, lastPostIndex)
-
   return (
     <div className='px-5 pt-6 pb-2.5 '>
       <div className='max-w-full overflow-x-auto'>
@@ -60,22 +60,24 @@ const TableBlog = () => {
             </tbody>
           ) : (
             <tbody>
-              {currentPosts.map((blog, key) => (
+              {currentPosts.map((recipes, key) => (
                 <tr key={key}>
                   <td className='border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11'>
                     <a
-                      href={`https://musclefirst.co.id/blog/${blog.slug}`}
+                      href={`https://musclefirst.co.id/recipes/${recipes.slug}`}
                       target='blank'
                     >
                       <h5 className='font-medium text-black dark:text-white hover:underline'>
-                        {blog.title}
+                        {recipes.title}
                       </h5>
                     </a>
-                    <p className='text-sm'>Category: {blog.category}</p>
+                    <p className='text-sm'>
+                      Protein: {recipes.protein}, Calories: {recipes.calories}
+                    </p>
                   </td>
                   <td className='border-b border-[#eee] py-5 px-4 dark:border-strokedark'>
                     <img
-                      src={blog.img_blog}
+                      src={recipes.img_recipe}
                       alt='Brand'
                       width={80}
                       height={80}
@@ -83,14 +85,14 @@ const TableBlog = () => {
                   </td>
                   <td className='border-b border-[#eee] py-5 px-4 dark:border-strokedark'>
                     <a
-                      href={`https://musclefirst.co.id/profile/${blog.tb_users.id}`}
+                      href={`https://musclefirst.co.id/profile/${recipes.tb_users.id}`}
                       target='blank'
                     >
                       <h5 className='font-medium text-black dark:text-white hover:underline'>
-                        {blog.tb_users.username}
+                        {recipes.tb_users.username}
                       </h5>
                     </a>
-                    <p className='text-sm'>Email: {blog.tb_users.email}</p>{' '}
+                    <p className='text-sm'>Email: {recipes.tb_users.email}</p>{' '}
                   </td>
                   <td className='border-b border-[#eee] py-5 px-4 dark:border-strokedark'>
                     <div className='flex items-center space-x-3.5'>
@@ -167,7 +169,7 @@ const TableBlog = () => {
           )}
         </table>
         <div>
-          <PaginationBlog
+          <PaginationRecipe
             totalPosts={data.length}
             postsPerPage={postsPerPage}
             currentPage={currentPage}
@@ -179,4 +181,4 @@ const TableBlog = () => {
   )
 }
 
-export default TableBlog
+export default TableRecipes

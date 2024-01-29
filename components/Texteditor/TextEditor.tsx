@@ -51,8 +51,6 @@ export default function TextEditor({
         <div className='h-full w-full gap-5'>
           {' '}
           <QuillEditor
-            name={formValue}
-            onChange={valueChange}
             modules={quillModules}
             formats={quillFormats}
             className='w-full h-full mt-2 bg-white text-black dark:bg-bodydark'
