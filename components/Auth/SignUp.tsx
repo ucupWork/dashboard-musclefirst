@@ -1,12 +1,8 @@
 'use client'
 import React, { ChangeEvent, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import axios from 'axios'
 import Link from 'next/link'
 import { Toaster, toast } from 'sonner'
-
-const supabaseUrl = 'https://your-supabase-url'
-const supabaseKey = 'your-supabase-key'
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 export const SignUpComp = () => {
   const [confirmPassword, setConfirmPasword] = useState('')
@@ -37,7 +33,7 @@ export const SignUpComp = () => {
     }
   }
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     const cek = form.password
 
@@ -45,33 +41,16 @@ export const SignUpComp = () => {
       return
     }
 
-    try {
-      const { user, error } = await supabase.auth.signUp({
-        email: form.email,
-        password: form.password
+    axios
+      .post('https://localhost:8080/users/register', form)
+      .then((res) => {
+        console.log(res)
+        toast.success('Succesful creating user')
       })
-
-      if (error) {
+      .catch((error) => {
         console.log(error)
-        toast.error('Error creating user')
-      } else {
-        console.log(user)
-        toast.success('Successful creating user')
-        // Optionally, you can save the username and role in a separate table
-        const { data, error: insertError } = await supabase
-          .from('profiles')
-          .insert([{ id: user?.id, username: form.username, role: form.role }])
-
-        if (insertError) {
-          console.log(insertError)
-          toast.error('Error saving user profile')
-        }
-      }
-    } catch (error) {
-      console.log(error)
-    }
+      })
   }
-
   return (
     <>
       <Toaster
@@ -98,6 +77,7 @@ export const SignUpComp = () => {
                   placeholder='Enter your full name'
                   className='w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
                 />
+
                 <span className='absolute right-4 top-4'>
                   <svg
                     className='fill-current'
@@ -135,6 +115,7 @@ export const SignUpComp = () => {
                   className='w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
                   required
                 />
+
                 <span className='absolute right-4 top-4'>
                   <svg
                     className='fill-current'
@@ -164,10 +145,10 @@ export const SignUpComp = () => {
                   name='password'
                   onChange={handleChange}
                   type='password'
-                  placeholder='6+ Characters, 1 Capital letter'
+                  placeholder='Enter your password'
                   className='w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
-                  required
                 />
+
                 <span className='absolute right-4 top-4'>
                   <svg
                     className='fill-current'
@@ -179,13 +160,11 @@ export const SignUpComp = () => {
                   >
                     <g opacity='0.5'>
                       <path
-                        fillRule='evenodd'
-                        clipRule='evenodd'
-                        d='M14.025 8.5125V6.85313C14.025 4.8 12.3531 3.12812 10.3 3.12812C8.24688 3.12812 6.575 4.8 6.575 6.85313V8.5125H5.4875C4.45781 8.5125 3.62812 9.34219 3.62812 10.3719V17.0281C3.62812 18.0578 4.45781 18.8875 5.4875 18.8875H15.1125C16.1422 18.8875 16.9719 18.0578 16.9719 17.0281V10.3719C16.9719 9.34219 16.1422 8.5125 15.1125 8.5125H14.025ZM7.85625 6.85313C7.85625 5.37188 9.01875 4.20937 10.5 4.20937C11.9812 4.20937 13.1438 5.37188 13.1438 6.85313V8.5125H7.85625V6.85313ZM5.4875 17.8062C5.17422 17.8062 4.92812 17.5602 4.92812 17.2469V10.3719C4.92812 10.0586 5.17422 9.8125 5.4875 9.8125H15.1125C15.4258 9.8125 15.6719 10.0586 15.6719 10.3719V17.2469C15.6719 17.5602 15.4258 17.8062 15.1125 17.8062H5.4875Z'
+                        d='M16.1547 6.80626V5.91251C16.1547 3.16251 14.0922 0.825009 11.4797 0.618759C10.0359 0.481259 8.59219 0.996884 7.52656 1.95938C6.46094 2.92188 5.84219 4.29688 5.84219 5.70626V6.80626C3.84844 7.18438 2.33594 8.93751 2.33594 11.0688V17.2906C2.33594 19.5594 4.19219 21.3813 6.42656 21.3813H15.5016C17.7703 21.3813 19.6266 19.525 19.6266 17.2563V11C19.6609 8.93751 18.1484 7.21876 16.1547 6.80626ZM8.55781 3.09376C9.31406 2.40626 10.3109 2.06251 11.3422 2.16563C13.1641 2.33751 14.6078 3.98751 14.6078 5.91251V6.70313H7.38906V5.67188C7.38906 4.70938 7.80156 3.78126 8.55781 3.09376ZM18.1141 17.2906C18.1141 18.7 16.9453 19.8688 15.5359 19.8688H6.46094C5.05156 19.8688 3.91719 18.7344 3.91719 17.325V11.0688C3.91719 9.52189 5.15469 8.28438 6.70156 8.28438H15.2953C16.8422 8.28438 18.1141 9.52188 18.1141 11V17.2906Z'
                         fill=''
                       />
                       <path
-                        d='M10.5 11.3093C9.74219 11.3093 9.13438 11.9172 9.13438 12.675C9.13438 13.3 9.51562 13.825 10.0594 14.0375V15.5375C10.0594 15.7844 10.275 16 10.5219 16C10.7688 16 10.9844 15.7844 10.9844 15.5375V14.0375C11.5281 13.825 11.9094 13.3 11.9094 12.675C11.8656 11.9172 11.2578 11.3093 10.5 11.3093ZM10.5 13.5562C10.1812 13.5562 9.94688 13.2781 9.94688 12.9594C9.94688 12.6406 10.225 12.4062 10.5 12.4062C10.8188 12.4062 11.0531 12.6844 11.0531 13.0031C11.0531 13.2781 10.8188 13.5562 10.5 13.5562Z'
+                        d='M10.9977 11.8594C10.5852 11.8594 10.207 12.2031 10.207 12.65V16.2594C10.207 16.6719 10.5508 17.05 10.9977 17.05C11.4102 17.05 11.7883 16.7063 11.7883 16.2594V12.6156C11.7883 12.2031 11.4102 11.8594 10.9977 11.8594Z'
                         fill=''
                       />
                     </g>
@@ -194,18 +173,18 @@ export const SignUpComp = () => {
               </div>
             </div>
 
-            <div className='mb-4'>
+            <div className='mb-6'>
               <label className='mb-2.5 block font-medium text-black dark:text-white'>
-                Confirm Password
+                Re-type Password
               </label>
               <div className='relative'>
                 <input
+                  onChange={(e) => checkValidation(e)}
                   type='password'
-                  onChange={checkValidation}
-                  placeholder='6+ Characters, 1 Capital letter'
+                  placeholder='Re-enter your password'
                   className='w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
-                  required
                 />
+
                 <span className='absolute right-4 top-4'>
                   <svg
                     className='fill-current'
@@ -217,39 +196,43 @@ export const SignUpComp = () => {
                   >
                     <g opacity='0.5'>
                       <path
-                        fillRule='evenodd'
-                        clipRule='evenodd'
-                        d='M14.025 8.5125V6.85313C14.025 4.8 12.3531 3.12812 10.3 3.12812C8.24688 3.12812 6.575 4.8 6.575 6.85313V8.5125H5.4875C4.45781 8.5125 3.62812 9.34219 3.62812 10.3719V17.0281C3.62812 18.0578 4.45781 18.8875 5.4875 18.8875H15.1125C16.1422 18.8875 16.9719 18.0578 16.9719 17.0281V10.3719C16.9719 9.34219 16.1422 8.5125 15.1125 8.5125H14.025ZM7.85625 6.85313C7.85625 5.37188 9.01875 4.20937 10.5 4.20937C11.9812 4.20937 13.1438 5.37188 13.1438 6.85313V8.5125H7.85625V6.85313ZM5.4875 17.8062C5.17422 17.8062 4.92812 17.5602 4.92812 17.2469V10.3719C4.92812 10.0586 5.17422 9.8125 5.4875 9.8125H15.1125C15.4258 9.8125 15.6719 10.0586 15.6719 10.3719V17.2469C15.6719 17.5602 15.4258 17.8062 15.1125 17.8062H5.4875Z'
+                        d='M16.1547 6.80626V5.91251C16.1547 3.16251 14.0922 0.825009 11.4797 0.618759C10.0359 0.481259 8.59219 0.996884 7.52656 1.95938C6.46094 2.92188 5.84219 4.29688 5.84219 5.70626V6.80626C3.84844 7.18438 2.33594 8.93751 2.33594 11.0688V17.2906C2.33594 19.5594 4.19219 21.3813 6.42656 21.3813H15.5016C17.7703 21.3813 19.6266 19.525 19.6266 17.2563V11C19.6609 8.93751 18.1484 7.21876 16.1547 6.80626ZM8.55781 3.09376C9.31406 2.40626 10.3109 2.06251 11.3422 2.16563C13.1641 2.33751 14.6078 3.98751 14.6078 5.91251V6.70313H7.38906V5.67188C7.38906 4.70938 7.80156 3.78126 8.55781 3.09376ZM18.1141 17.2906C18.1141 18.7 16.9453 19.8688 15.5359 19.8688H6.46094C5.05156 19.8688 3.91719 18.7344 3.91719 17.325V11.0688C3.91719 9.52189 5.15469 8.28438 6.70156 8.28438H15.2953C16.8422 8.28438 18.1141 9.52188 18.1141 11V17.2906Z'
                         fill=''
                       />
                       <path
-                        d='M10.5 11.3093C9.74219 11.3093 9.13438 11.9172 9.13438 12.675C9.13438 13.3 9.51562 13.825 10.0594 14.0375V15.5375C10.0594 15.7844 10.275 16 10.5219 16C10.7688 16 10.9844 15.7844 10.9844 15.5375V14.0375C11.5281 13.825 11.9094 13.3 11.9094 12.675C11.8656 11.9172 11.2578 11.3093 10.5 11.3093ZM10.5 13.5562C10.1812 13.5562 9.94688 13.2781 9.94688 12.9594C9.94688 12.6406 10.225 12.4062 10.5 12.4062C10.8188 12.4062 11.0531 12.6844 11.0531 13.0031C11.0531 13.2781 10.8188 13.5562 10.5 13.5562Z'
+                        d='M10.9977 11.8594C10.5852 11.8594 10.207 12.2031 10.207 12.65V16.2594C10.207 16.6719 10.5508 17.05 10.9977 17.05C11.4102 17.05 11.7883 16.7063 11.7883 16.2594V12.6156C11.7883 12.2031 11.4102 11.8594 10.9977 11.8594Z'
                         fill=''
                       />
                     </g>
                   </svg>
                 </span>
+                <p className='mt-3 text-danger font-semibold'>{isError}</p>
               </div>
             </div>
 
             <div className='mb-5'>
-              <input
+              <button
                 type='submit'
-                value='Sign Up'
+                value='Create account'
+                onClick={handleSubmit}
                 className='w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90'
               />
             </div>
-          </form>
 
-          <p className='text-center text-base font-medium text-body-color'>
-            Already a member?{' '}
-            <Link href='/login' className='text-primary hover:underline'>
-              Sign In
-            </Link>
-          </p>
+            <div className='mt-6 text-center'>
+              <p>
+                Already have an account?{' '}
+                <Link
+                  href='/auth/signin'
+                  className='text-primary'
+                >
+                  Sign in
+                </Link>
+              </p>
+            </div>
+          </form>
         </div>
       </div>
-    </div>
+    </>
   )
 }
-
