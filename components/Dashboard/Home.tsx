@@ -1,12 +1,12 @@
 'use client'
 import React from 'react'
 import CardDataStats from '../CardDataStats'
-import TableBlog from '../Tables/TableBlog'
+import TableBlog from '@/components/Blog/TableBlog'
 
 const HomePage: React.FC = () => {
   return (
     <>
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-4 xl:grid-cols-3 xl:gap-7.5'>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-4 xl:grid-'>
         <CardDataStats
           title='Total Order'
           total='Rp.999.999'
@@ -83,8 +83,8 @@ const HomePage: React.FC = () => {
         </CardDataStats>
       </div>
 
-      <div className='mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5'>
-        <div className='bg-white rounded border-stroke pt-6 pb-2.5 shadow-default dark:border-boxdark dark:bg-boxdark col-span-12'>
+      <div className='mt-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5'>
+        <div className='bg-white rounded border-stroke pt-6 pb-2.5 shadow-default dark:border-boxdark dark:bg-boxdark'>
           <TableBlog />
         </div>
       </div>

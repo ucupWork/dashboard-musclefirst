@@ -5,56 +5,49 @@ interface PaginationProps {
   postsPerPage: number
   currentPage: number
   setCurrentPage: (page: number) => void
+  displaySections: number // Add this prop to handle display of pagination sections
 }
 
 const PaginationBlog: React.FC<PaginationProps> = ({
   totalPosts,
   postsPerPage,
   currentPage,
-  setCurrentPage
+  setCurrentPage,
+  displaySections,
 }) => {
-  const totalPages = Math.ceil(totalPosts / postsPerPage)
+  const pageNumbers = []
+  for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
+    pageNumbers.push(i)
+  }
 
-  // Create an array of page numbers
-  const pages = Array.from({ length: totalPages }, (_, index) => index + 1)
+  const handleClick = (number: number) => {
+    setCurrentPage(number)
+  }
+
+  const startIndex = Math.max(0, currentPage - displaySections)
+  const endIndex = Math.min(pageNumbers.length, currentPage + displaySections - 1)
+  const displayPageNumbers = pageNumbers.slice(startIndex, endIndex)
 
   return (
-    <>
-      <div className=' flex justify-center'>
+    <nav>
+      <ul className='flex justify-center items-center gap-4 p-5'>
         {currentPage > 1 && (
-          <button
-            className='h-7 w-12 border rounded-lg bg-boxdark text-white'
-            onClick={() => setCurrentPage(currentPage - 1)}
-            aria-label='Go to Previous Page'
-          >
-            Prev
-          </button>
+          <li>
+            <button onClick={() => handleClick(currentPage - 1)} className='border-2 rounded-lg px-2 py-1'>Prev</button>
+          </li>
         )}
-
-        {pages.map((page) => (
-          <button
-            key={page}
-            className={`h-7 w-7 mx-1 border rounded-lg ${
-              page === currentPage ? ' bg-boxdark text-white' : ''
-            }`}
-            onClick={() => setCurrentPage(page)}
-            aria-label={`Go to Page ${page}`}
-          >
-            {page}
-          </button>
+        {displayPageNumbers.map(number => (
+          <li key={number} className={number === currentPage ? 'active' : ''}>
+            <button onClick={() => handleClick(number)}>{number}</button>
+          </li>
         ))}
-
-        {currentPage < totalPages && (
-          <button
-            className='h-7 w-12 border rounded-lg bg-boxdark text-white'
-            onClick={() => setCurrentPage(currentPage + 1)}
-            aria-label='Go to Next Page'
-          >
-            Next
-          </button>
+        {currentPage < pageNumbers.length && (
+          <li>
+            <button onClick={() => handleClick(currentPage + 1)} className='border-2 rounded-lg px-2 py-1'>Next</button>
+          </li>
         )}
-      </div>
-    </>
+      </ul>
+    </nav>
   )
 }
 
