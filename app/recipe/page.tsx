@@ -2,7 +2,7 @@ import React from 'react'
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb'
 import { Metadata } from 'next'
 
-import TableRecipes from '@/components/Tables/TableRecipes'
+import TableRecipes from '@/components/Recipes/TableRecipes'
 export const metadata: Metadata = {
   title: 'Recipe Table Page | Muscle First Dashboard',
   description: 'Recipe table page for Muscle First Dashboard'

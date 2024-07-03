@@ -2,7 +2,7 @@ import React from 'react'
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb'
 import { Metadata } from 'next'
 
-import TableBlog from '@/components/Tables/TableBlog'
+import TableBlog from '@/components/Blog/TableBlog'
 export const metadata: Metadata = {
   title: 'Blog Table Page | Muscle First Dashboard',
   description: 'Blog table page for Muscle First Dashboard'

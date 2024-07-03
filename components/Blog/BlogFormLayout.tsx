@@ -75,7 +75,7 @@ const BlogFormLayouts = () => {
 
   let onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    axios
+    axios 
       .post(`${process.env.NEXT_PUBLIC_MUSCLE_API}/blog`, data)
       .then((res) => {
         toast.success(res.data.message, { duration: 2500 })
@@ -116,18 +116,29 @@ const BlogFormLayouts = () => {
               onChange={onChange}
               className='w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
             />
-            {/* Quill Image */}
+            {/* Image */}
             <label className='my-3 block text-black dark:text-white'>
               Blog Image (Insert Image Url)
             </label>
+            <div className='fixed z-10 inset-0 overflow-y-auto'>
+              <div className='flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0'>
+                <div className='fixed inset-0 transition-opacity'>
+                  <div className='absolute inset-0 bg-gray-500 opacity-75'></div>
+                </div>
+                <span className='hidden sm:inline-block sm:align-middle sm:h-screen'></span>
+                <div className='inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6'>
+        
+                </div>
+              </div>
+            </div>
             <input
               type='text'
               name='img_blog'
               value={data.img_blog}
               onChange={onChange}
               className='w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
-            />
-            {/* Slug */}
+            /> 
+             {/* Slug */}
             <label className='my-3 block text-black dark:text-white'>
               Slug
             </label>
@@ -182,14 +193,14 @@ const BlogFormLayouts = () => {
                   onChange={handleQuillForm}
                   modules={quillModules}
                   formats={quillFormats}
-                  className='w-full h-full mt-2 bg-white text-black dark:text-stroke'
+                  className=' h-72 mt-2 bg-white text-black '
                 />
-              </div>{' '}
-            </div>
+              </div>
+            </div> <br /><br />
             <button
               type='button' // Change to 'button' to prevent form submission
               onClick={onClick}
-              className='my-4 rounded-md bg-primary py-2 px-5 text-center text-xl font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10'
+              className=' block my-4 rounded-md bg-primary py-2 px-5 text-center text-xl font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10'
             >
               Insert Blog
             </button>
