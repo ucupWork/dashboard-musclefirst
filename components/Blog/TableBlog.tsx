@@ -143,7 +143,7 @@ const TableBlog: React.FC = () => {
                   </td>
                   <td className='border-b border-[#eee] py-5 px-4 dark:border-strokedark'>
                     <div className='flex items-center space-x-3.5'>
-                      <div className=' whitespace-normal' dangerouslySetInnerHTML={{ __html: blog.description }}/>
+                      {/* <div className=' whitespace-normal' dangerouslySetInnerHTML={{ __html: blog.description }}/> */}
 
                       {/* <button className='hover:text-primary'>
                         <svg
@@ -191,7 +191,7 @@ const TableBlog: React.FC = () => {
             postsPerPage={postsPerPage}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
-            displaySections={2} // Pass the prop to handle display of pagination sections
+            displaySections={3} // Pass the prop to handle display of pagination sections
           />
         </div>
       </div>
