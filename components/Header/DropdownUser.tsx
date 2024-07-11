@@ -56,7 +56,7 @@ const DropdownUser = () => {
     toast.success('Log out Berhasil', {
       duration: 3000
     })
-    router.replace('/auth/sign-in')
+    location.reload()
   }
 
   useEffect(() => {

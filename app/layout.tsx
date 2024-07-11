@@ -17,11 +17,15 @@ export default function RootLayout({
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [loading, setLoading] = useState<boolean>(true)
+  const [isClient, setIsClient] = useState(false)
 
-  const userId = localStorage.getItem('user_id')
-  if (!userId) {
-    router.push(`/auth/sign-in` || `/auth/sign-up`)
-  }
+  useEffect(() => {
+    setIsClient(true)
+    const userId = localStorage.getItem('user_id')
+    if (!userId) {
+      router.push(`/auth/sign-in` || `/auth/sign-up`)
+    }
+  }, [router])
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000)
