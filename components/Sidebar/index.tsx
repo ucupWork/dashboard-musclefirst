@@ -210,7 +210,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Blog --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/blog' || pathname.includes('dashboard')
+                  pathname === '/blog' || pathname.includes('blog')
                 }
               >
                 {(handleClick, open) => {
@@ -302,7 +302,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Recipe --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/recipe' || pathname.includes('dashboard')
+                  pathname === '/recipe' || pathname.includes('recipe')
                 }
               >
                 {(handleClick, open) => {
@@ -401,7 +401,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <Link
                   href='/profile'
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('profile') && 'bg-graydark dark:bg-meta-4'
+                    pathname === '/profile' && 'text-primary'
                   }`}
                 >
                   <svg
@@ -427,7 +427,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Profile --> */}
 
               {/* <!-- Menu Item Settings --> */}
-              <li>
+              {/* <li>
                 <Link
                   href='/settings'
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -466,7 +466,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </svg>
                   Settings
                 </Link>
-              </li>
+              </li> */}
               {/* <!-- Menu Item Settings --> */}
             </ul>
           </div>
