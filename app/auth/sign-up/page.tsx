@@ -3,7 +3,7 @@ import React from 'react'
 
 const SignupUser = () => {
   return (
-    <div className=' p-10' >
+    <div className=' p-10'>
       <div className='flex rounded-lg shadow-2xl overflow-hidden m-auto max-w-sm lg:max-w-5xl dark:shadow-white'>
         <div
           className='hidden lg:block lg:w-1/2 bg-cover'

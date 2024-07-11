@@ -3,15 +3,18 @@ import React, { ChangeEvent, useState } from 'react'
 import axios from 'axios'
 import Link from 'next/link'
 import { Toaster, toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 export const SignUpComp = () => {
+  const router = useRouter()
+
   const [confirmPassword, setConfirmPasword] = useState('')
   const [isError, setIsError] = useState('')
   const [form, setForm] = useState({
     username: '',
     email: '',
     password: '',
-    role: 'user'
+    roles: 'user'
   })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +23,7 @@ export const SignUpComp = () => {
       [e.target.name]: e.target.value
     })
   }
-  console.log(form)
+  // console.log(form)
 
   const checkValidation = (e: ChangeEvent<HTMLInputElement>) => {
     const confirm = e.target.value
@@ -33,7 +36,7 @@ export const SignUpComp = () => {
     }
   }
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const cek = form.password
 
@@ -42,12 +45,13 @@ export const SignUpComp = () => {
     }
 
     axios
-      .post('https://localhost:8080/users/register', form)
+      .post(`${process.env.NEXT_PUBLIC_MUSCLE_API}/users/register`, form)
       .then((res) => {
-        console.log(res)
         toast.success('Succesful creating user')
+        router.push('/auth/sign-in')
       })
       .catch((error) => {
+        toast.error(error.message)
         console.log(error)
       })
   }
@@ -59,12 +63,11 @@ export const SignUpComp = () => {
       />
       <div className='w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2'>
         <div className='w-full p-4 sm:p-12.5 xl:p-17.5'>
-          <span className='mb-1.5 block font-medium'>Start for free</span>
           <h2 className='mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>
             Sign Up to Muscle First Dashboard
           </h2>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className='mb-4'>
               <label className='mb-2.5 block font-medium text-black dark:text-white'>
                 Name
@@ -214,16 +217,17 @@ export const SignUpComp = () => {
               <button
                 type='submit'
                 value='Create account'
-                onClick={handleSubmit}
                 className='w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90'
-              />
+              >
+                Register
+              </button>
             </div>
 
             <div className='mt-6 text-center'>
               <p>
                 Already have an account?{' '}
                 <Link
-                  href='/auth/signin'
+                  href='/auth/sign-in'
                   className='text-primary'
                 >
                   Sign in

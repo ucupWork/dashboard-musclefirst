@@ -3,8 +3,10 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import PaginationBlog from '../Pagination/PaginationBlog'
+import DeleteBlogModal from '../Modal/Blog/DeleteBlog'
 
 interface Blog {
+  id: string
   title: string
   slug: string
   category: string
@@ -26,7 +28,7 @@ const TableBlog: React.FC = () => {
 
   useEffect(() => {
     setLoading(true)
-    axios 
+    axios
       .get(`${process.env.NEXT_PUBLIC_MUSCLE_API}/blog`)
       .then((res) => {
         setLoading(false)
@@ -37,10 +39,11 @@ const TableBlog: React.FC = () => {
       })
   }, [])
 
-  const filteredData = data.filter(blog =>
-    blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.tb_users.username.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = data.filter(
+    (blog) =>
+      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.tb_users.username.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const lastPostIndex: number = currentPage * postsPerPage
@@ -52,7 +55,9 @@ const TableBlog: React.FC = () => {
     setCurrentPage(1) // Reset to the first page after search
   }
 
-  const handlePostsPerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePostsPerPageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setPostsPerPage(Number(event.target.value))
     setCurrentPage(1) // Reset to the first page after changing posts per page
   }
@@ -93,7 +98,7 @@ const TableBlog: React.FC = () => {
               <th className='min-w-[120px] py-4 px-4 font-medium text-black dark:text-white'>
                 Author
               </th>
-              <th className='py-4 px-4 font-medium text-black dark:text-white'>
+              <th className='min-w-[200px] py-4 px-4 font-medium text-black dark:text-white'>
                 Actions
               </th>
             </tr>
@@ -142,43 +147,7 @@ const TableBlog: React.FC = () => {
                     <p className='text-sm'>Email: {blog.tb_users.email}</p>{' '}
                   </td>
                   <td className='border-b border-[#eee] py-5 px-4 dark:border-strokedark'>
-                    <div className='flex items-center space-x-3.5'>
-                      {/* <div className=' whitespace-normal' dangerouslySetInnerHTML={{ __html: blog.description }}/> */}
-
-                      {/* <button className='hover:text-primary'>
-                        <svg
-                          className='fill-current'
-                          width='18'
-                          height='18'
-                          viewBox='0 0 18 18'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
-                        </svg>
-                      </button>
-                      <button className='hover:text-primary'>
-                        <svg
-                          className='fill-current'
-                          width='18'
-                          height='18'
-                          viewBox='0 0 18 18'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
-                        </svg>
-                      </button>
-                      <button className='hover:text-primary'>
-                        <svg
-                          className='fill-current'
-                          width='18'
-                          height='18'
-                          viewBox='0 0 18 18'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
-                        </svg>
-                      </button> */}
-                    </div>
+                    <DeleteBlogModal idBlog={blog.id} />
                   </td>
                 </tr>
               ))}
