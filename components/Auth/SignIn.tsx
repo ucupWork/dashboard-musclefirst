@@ -31,7 +31,12 @@ export const SignInComp = () => {
       localStorage.setItem('user_id', res.data.data.user.id);
       router.push('/');
     } catch (error) {
-      toast.error(error.response ? error.response.data.message : 'Login failed');
+      // Type guard to check if error is an AxiosError
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response ? error.response.data.message : 'Login failed');
+      } else {
+        toast.error('An unexpected error occurred');
+      }
     }
   };
 

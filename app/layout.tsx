@@ -18,10 +18,10 @@ export default function RootLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [loading, setLoading] = useState<boolean>(true)
 
-  // const userId = localStorage.getItem('user_id')
-  // if (!userId) {
-  //   router.push(`/auth/sign-in` || `/auth/sign-up`)
-  // }
+  const userId = localStorage.getItem('user_id')
+  if (!userId) {
+    router.push(`/auth/sign-in` || `/auth/sign-up`)
+  }
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000)
