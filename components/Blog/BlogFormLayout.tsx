@@ -5,6 +5,7 @@ import React, { ChangeEvent, useState } from 'react'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
 import { Toaster, toast } from 'sonner'
+import DroprownCategory from '../Header/DropdownCategory'
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -81,6 +82,13 @@ const BlogFormLayouts = () => {
     }))
   }
 
+  const handleCategoryChange = (category: string) => {
+    setData((prevData) => ({
+      ...prevData,
+      category: category
+    }))
+  }
+
   const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
@@ -133,14 +141,14 @@ const BlogFormLayouts = () => {
               name='title'
               value={data.title}
               onChange={onChange}
-              className='w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
+              className='w-full rounded-lg border-[1.5px] border-bodydark bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
             />
             <label className='my-3 block text-black dark:text-white'>
               Blog Image (Insert Image)
             </label>
             <div
               id='FileUpload'
-              className='relative mb-5.5 block w-full cursor-pointer appearance-none rounded border-2 border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5'
+              className='relative mb-5.5 block w-full cursor-pointer appearance-none rounded border-2 border-dashed border-bodydark bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5'
             >
               <input
                 type='file'
@@ -206,18 +214,10 @@ const BlogFormLayouts = () => {
               name='slug'
               value={data.slug}
               onChange={onChange}
-              className='w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
+              className='w-full rounded-lg border-[1.5px] border-bodydark bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
             />
-            <label className='my-3 block text-black dark:text-white'>
-              Category
-            </label>
-            <input
-              type='text'
-              name='category'
-              value={data.category}
-              onChange={onChange}
-              className='w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
-            />
+            {/* make this dropdown can change value of data.category*/}
+            <DroprownCategory onCategoryChange={handleCategoryChange} />
             <label className='my-3 block text-black dark:text-white'>
               Keywords
             </label>
@@ -226,7 +226,7 @@ const BlogFormLayouts = () => {
               name='keywords'
               value={data.keywords}
               onChange={onChange}
-              className='w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
+              className='w-full rounded-lg border-[1.5px] border-bodydark bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
             />
             <label className='my-3 block text-black dark:text-white'>
               Meta Description
@@ -236,7 +236,7 @@ const BlogFormLayouts = () => {
               name='meta_description'
               value={data.meta_description}
               onChange={onChange}
-              className='w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
+              className='w-full rounded-lg border-[1.5px] border-bodydark bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
             />
             <label className='my-3 block text-black dark:text-white'>
               Quotes
@@ -246,9 +246,9 @@ const BlogFormLayouts = () => {
               name='quotes'
               value={data.quotes}
               onChange={onChange}
-              className='w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
+              className='w-full rounded-lg border-[1.5px] border-bodydark bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input'
             />
-            <div className='my-4'>
+            <div className='mt-4 mb-26 md:mb-16'>
               <span className='font-medium'>Description</span>
               <div className='h-full w-full gap-5'>
                 <QuillEditor
@@ -257,7 +257,7 @@ const BlogFormLayouts = () => {
                   onChange={handleQuillForm}
                   modules={quillModules}
                   formats={quillFormats}
-                  className='h-72 mt-2 mb-10 md:mb-5 bg-white text-black'
+                  className='h-72 mt-2 md:mb-5 bg-white text-black'
                 />
               </div>
             </div>
