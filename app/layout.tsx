@@ -1,31 +1,37 @@
-'use client'
-import './globals.css'
-import './data-tables-css.css'
-import './satoshi.css'
-import { useState, useEffect } from 'react'
+'use client';
+import './globals.css';
+import './data-tables-css.css';
+import './satoshi.css';
+import { useState, useEffect } from 'react';
 
-import Loader from '@/components/common/Loader'
-import Sidebar from '@/components/Sidebar'
-import Header from '@/components/Header'
-import { useRouter } from 'next/navigation'
+import Loader from '@/components/common/Loader';
+import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header';
+import { useRouter } from 'next/navigation';
 
 export default function RootLayout({
   children
 }: {
   children: React.ReactNode
 }) {
-  const router = useRouter()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [loading, setLoading] = useState<boolean>(true)
-
-  const userId = localStorage.getItem('user_id')
-  if (!userId) {
-    router.push(`/auth/sign-in` || `/auth/sign-up`)
-  }
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000)
-  }, [])
+    const userId = window.localStorage.getItem('user_id');
+    setUserId(userId);
+
+    if (!userId) {
+      router.push('/auth/sign-in');
+    }
+  }, [router]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <html lang='en'>
@@ -53,6 +59,7 @@ export default function RootLayout({
                 <Header
                   sidebarOpen={sidebarOpen}
                   setSidebarOpen={setSidebarOpen}
+                  userId={userId} // Pass userId here
                 />
 
                 <main>
@@ -66,5 +73,5 @@ export default function RootLayout({
         </div>
       </body>
     </html>
-  )
+  );
 }

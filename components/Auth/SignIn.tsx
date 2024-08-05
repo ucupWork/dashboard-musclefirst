@@ -28,10 +28,14 @@ export const SignInComp = () => {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_MUSCLE_API}/users/login`, form);
       toast.success(res.data.message);
-      localStorage.setItem('user_id', res.data.data.user.id);
+      if (typeof localStorage !== 'undefined') {
+        // Save user_id as JSON string
+        localStorage.setItem('user_id', res.data.data.user.id);
+      } else {
+        console.log('Web Storage is not supported in this environment.');
+      }
       router.push('/');
     } catch (error) {
-      // Checker Error
       if (axios.isAxiosError(error)) {
         toast.error(error.response ? error.response.data.message : 'Login failed');
       } else {
