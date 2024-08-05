@@ -1,93 +1,117 @@
-import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
-import axios from 'axios'
-import { toast, Toaster } from 'sonner'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { toast, Toaster } from 'sonner';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import Image from 'next/image';
 
 interface UserData {
-  id: string
-  username: string
-  email: string
-  roles: string
-  img_user: string
+  userId: string | null 
+  username: string;
+  email: string;
+  roles: string;
+  img_user: string;
 }
 
 const DropdownUser = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const trigger = useRef<HTMLAnchorElement | null>(null);
+  const dropdown = useRef<HTMLDivElement | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
-  const trigger = useRef<any>(null)
-  const dropdown = useRef<any>(null)
+  // Toggle dropdown visibility
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
-  // close on click outside
+  // Close dropdown when clicking outside
   useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdown.current) return
+    const clickHandler = (event: MouseEvent) => {
+      if (!dropdown.current || !trigger.current) return;
       if (
-        !dropdownOpen ||
-        dropdown.current.contains(target) ||
-        trigger.current.contains(target)
-      )
-        return
-      setDropdownOpen(false)
-    }
-    document.addEventListener('click', clickHandler)
-    return () => document.removeEventListener('click', clickHandler)
-  }, [dropdownOpen])
+        dropdownOpen ||
+        dropdown.current.contains(event.target as Node) ||
+        trigger.current.contains(event.target as Node)
+      ) {
+        return;
+      }
+      setDropdownOpen(false);
+    };
 
-  // close if the esc key is pressed
+    document.addEventListener('click', clickHandler);
+    return () => document.removeEventListener('click', clickHandler);
+  }, [dropdownOpen]);
+
+  // Close dropdown if Esc key is pressed
   useEffect(() => {
-    const keyHandler = ({ keyCode }: KeyboardEvent) => {
-      if (keyCode === 27) setDropdownOpen(false)
-    }
-    document.addEventListener('keydown', keyHandler)
-    return () => document.removeEventListener('keydown', keyHandler)
-  }, [])
+    const keyHandler = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setDropdownOpen(false);
+    };
 
-  // user data
-  // user data
-  const router = useRouter()
-  const userId = localStorage.getItem('user_id')
-  const [userData, setUserData] = useState<UserData | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
+    document.addEventListener('keydown', keyHandler);
+    return () => document.removeEventListener('keydown', keyHandler);
+  }, []);
+  
+  // Fetch user data when userId changes
+  // const [userId, setUserId] = useState<string | null>(null);
+  // useEffect(() => {
+  //   const userId = window.localStorage.getItem('user_id');
+  //   setUserId(userId);
+  // }, [router]);
 
+  // useEffect(() => {
+  //   if (userId) {
+  //     axios
+  //       .get(`${process.env.NEXT_PUBLIC_MUSCLE_API}/users/${userId}`)
+  //       .then((res) => {
+  //         setUserData(res.data.data);
+  //         setLoading(false);
+  //       })
+  //       .catch(() => {
+  //         toast.error('Login terlebih dahulu untuk mengakses dashboard');
+  //         setLoading(false);
+  //       });
+  //   } else {
+  //     setLoading(false); // In case userId is not available
+  //   }
+  // }, [userId]);
+
+  // Handle logout
   const logOut = () => {
-    localStorage.clear()
-    toast.success('Log out Berhasil', {
-      duration: 3000
-    })
-    location.reload()
-  }
-
-  useEffect(() => {
-    setLoading(true)
-    axios
-      .get(`${process.env.NEXT_PUBLIC_MUSCLE_API}/users/${userId}`)
-      .then((res) => {
-        setUserData(res.data.data)
-        setLoading(false)
-      })
-      .catch(() => {
-        toast('Login terlebih dahulu untuk mengakses dashboard')
-      })
-  }, [userId])
+    localStorage.clear();
+    toast.success('Log out berhasil', {
+      duration: 1000,
+    });
+    router.push('/auth/sign-in');
+  };
 
   return (
     <>
-      <Toaster
-        position='bottom-center'
-        richColors
-      />
+      <Toaster position='bottom-center' richColors />
       <div className='relative'>
         <Link
           ref={trigger}
-          onClick={() => setDropdownOpen(!dropdownOpen)}
+          onClick={toggleDropdown}
           className='flex items-center gap-4'
           href='#'
         >
-          {loading ? (
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth='1.5'
+            stroke='currentColor'
+            className=' w-8 h-8'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'
+            />
+          </svg>
+          {/* {loading ? (
             <div className='animate-pulse'>
-              <span className='bg-zinc-600 h-12 w-28'></span>
+              <span className='bg-zinc-600 h-12 w-12 rounded-full'></span>
             </div>
           ) : (
             <>
@@ -99,38 +123,41 @@ const DropdownUser = () => {
                   <span className='block text-xs'>{userData.roles}</span>
                 </span>
               )}
-
               <span className='block'>
                 {userData ? (
-                  <Image
-                    width={112}
-                    height={112}
-                    src={userData.img_user}
-                    alt='User'
-                    className='h-12 w-12 rounded-full object-cover'
-                  />
-                ) : (
-                  <>
                     <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke-width='1.5'
-                      stroke='currentColor'
-                      className='size-6'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth='1.5'
+                    stroke='currentColor'
+                    className='size-6'
                     >
-                      <path
-                        stroke-linecap='round'
-                        stroke-linejoin='round'
-                        d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'
-                      />
-                    </svg>
-                  </>
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth='1.5'
+                    stroke='currentColor'
+                    className='w-12 h-12'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'
+                    />
+                  </svg>
                 )}
               </span>
             </>
-          )}
-
+          )} */}
           <svg
             className='hidden fill-current sm:block'
             width='12'
@@ -148,7 +175,7 @@ const DropdownUser = () => {
           </svg>
         </Link>
 
-        {/* Dropdown Start */}
+        {/* Dropdown Menu */}
         <div
           ref={dropdown}
           className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
@@ -187,92 +214,27 @@ const DropdownUser = () => {
                 onClick={logOut}
               >
                 <svg
-                  className='fill-current'
-                  id='Interface_Logout_Square_24'
-                  width='22'
-                  height='22'
-                  viewBox='0 0 22 22'
-                  fill='none'
                   xmlns='http://www.w3.org/2000/svg'
-                  xmlnsXlink='http://www.w3.org/1999/xlink'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-6'
                 >
-                  <rect
-                    width={22}
-                    height={22}
-                    stroke='none'
-                    opacity={0}
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15'
                   />
-                  <g transform='matrix(1.43 0 0 1.43 12 12)'>
-                    <g style={{}}>
-                      <g transform='matrix(1 0 0 1 -1 0)'>
-                        <path
-                          style={{
-                            stroke: 'currentColor',
-                            strokeWidth: 1,
-                            strokeDasharray: 'none',
-                            strokeLinecap: 'round',
-                            strokeDashoffset: 0,
-                            strokeLinejoin: 'round',
-                            strokeMiterlimit: 4,
-                            fill: 'none',
-                            fillRule: 'nonzero',
-                            opacity: 1
-                          }}
-                          transform='translate(-6, -7)'
-                          d='M 11.5 11.5 C 11.5 11.7652 11.3946 12.0196 11.2071 12.2071 C 11.0196 12.3946 10.7652 12.5 10.5 12.5 L 1.5 12.5 C 1.23478 12.5 0.98043 12.3946 0.792893 12.2071 C 0.605357 12.0196 0.5 11.7652 0.5 11.5 L 0.5 2.5 C 0.5 2.23478 0.605357 1.98043 0.792893 1.79289 C 0.98043 1.60536 1.23478 1.5 1.5 1.5 L 10.5 1.5 C 10.7652 1.5 11.0196 1.60536 11.2071 1.79289 C 11.3946 1.98043 11.5 2.23478 11.5 2.5'
-                          strokeLinecap='round'
-                        />
-                      </g>
-                      <g transform='matrix(1 0 0 1 2.75 0)'>
-                        <path
-                          style={{
-                            stroke: 'currentColor',
-                            strokeWidth: 1,
-                            strokeDasharray: 'none',
-                            strokeLinecap: 'round',
-                            strokeDashoffset: 0,
-                            strokeLinejoin: 'round',
-                            strokeMiterlimit: 4,
-                            fill: 'none',
-                            fillRule: 'nonzero',
-                            opacity: 1
-                          }}
-                          transform='translate(-9.75, -7)'
-                          d='M 6 7 L 13.5 7'
-                          strokeLinecap='round'
-                        />
-                      </g>
-                      <g transform='matrix(1 0 0 1 5.5 0)'>
-                        <path
-                          style={{
-                            stroke: 'currentColor',
-                            strokeWidth: 1,
-                            strokeDasharray: 'none',
-                            strokeLinecap: 'round',
-                            strokeDashoffset: 0,
-                            strokeLinejoin: 'round',
-                            strokeMiterlimit: 4,
-                            fill: 'none',
-                            fillRule: 'nonzero',
-                            opacity: 1
-                          }}
-                          transform='translate(-12.5, -7)'
-                          d='M 11.5 5 L 13.5 7 L 11.5 9'
-                          strokeLinecap='round'
-                        />
-                      </g>
-                    </g>
-                  </g>
                 </svg>
                 Log Out
               </Link>
             </li>
           </ul>
         </div>
-        {/* Dropdown End */}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default DropdownUser
+export default DropdownUser;

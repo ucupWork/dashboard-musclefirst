@@ -14,8 +14,13 @@ interface UserData {
 }
 
 const HomePage: React.FC = () => {
-  const userId = localStorage.getItem('user_id')
+  const [userId, setUserId] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null)
+
+  useEffect(() => {
+    const userId = window.localStorage.getItem('user_id');
+    setUserId(userId);
+  }, []);  
 
   useEffect(() => {
     axios

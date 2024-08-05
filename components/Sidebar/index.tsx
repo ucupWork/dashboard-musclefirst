@@ -287,7 +287,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 pathname === '/blog/insert' && 'text-primary'
                               } `}
                             >
-                              Blog Form
+                              Insert Blog
                             </Link>
                           </li>
                         </ul>
@@ -384,7 +384,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 pathname === '/recipe/insert' && 'text-primary'
                               } `}
                             >
-                              Recipe Form
+                              Insert Recipe
                             </Link>
                           </li>
                         </ul>
